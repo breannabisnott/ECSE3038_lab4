@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, List, Optional
 from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel, BeforeValidator, TypeAdapter, Field
@@ -47,14 +48,19 @@ async def get_profile():
 
 @app.post("/profile", status_code=201)
 async def create_profile(profile: Profile):
+    profile_check = await db["profiles4"].find().to_list(1)
+
+    if len(profile_check) == 0:
+        current_time = datetime.now().strftime("%d/%m/%Y, %I:%M:%S %p")
         
-    #insert some if here
-        new_profile = await db["profiles4"].insert_one(profile.model_dump())
+        profile_info = profile.model_dump()
+        profile_info["last_updated"] = current_time
+        new_profile = await db["profiles4"].insert_one(profile_info)
 
         created_profile = await db["profiles4"].find_one({"_id": new_profile.inserted_id})
         return Profile(**created_profile)
-    #raise HTTPException(status_code = 400, detail = "Unable to create more than 1 profile")
-
+    
+    raise HTTPException(status_code = 400, detail = "Unable to create more than 1 profile")
 
 @app.get("/tank")
 async def get_tanks():
@@ -63,10 +69,12 @@ async def get_tanks():
 
 @app.get("/tank/{id}")
 async def get_tank(id: str):
-    #insert if
-        tank = await db["tanks4"].find_one({"_id": ObjectId(id)})
-        return Tank(**tank)
-    #raise HTTPException(status_code = 404, detail = "Tank of id: " + id + " not found.")
+    tank = await db["tanks4"].find_one({"_id": ObjectId(id)})
+    if tank is None:
+        raise HTTPException(status_code = 404, detail = "Tank of id: " + id + " not found.")
+
+    return Tank(**tank)
+    
 
 @app.post("/tank", status_code=201)
 async def create_tank(tank: Tank):
