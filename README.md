@@ -1,5 +1,9 @@
 # Breanna Bisnott ECSE3038 Lab 4 Submission
-### This was exhausting & emotionally draining :D!
+### Would you rather?
+Would you rather be gluten intolerant or allergic to seafood for the rest of your life? 
+
+![gf bread](https://github.com/breannabisnott/ECSE3038_lab4/assets/158131996/bfd8b102-eeed-4703-b384-ce16fcac42b5)
+
 The purpose of this code is for a lab assignment on building POST request handlers with FastAPI
 
 ## `get_profile()`
@@ -29,3 +33,5 @@ If the API is unable to locate the object that has the id specified, the API res
 ## `delete_tank()`
 The web application allows the client to delete any previously POSTed object. The web application does not send back any message to the client once the objects have been deleted. There is, however, a suitable status code that indicates **success** and that an **empty response is sent**.
 If the API is unable to locate the object that has the id specified, the API responds with an appropriate response message and status code.
+
+### This was exhausting & emotionally draining :D!
